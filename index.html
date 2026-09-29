@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiling Madrasah Inklusi - FPMI Sumbar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .step-active { border-color: #059669; color: #059669; font-weight: 600; }
+        .step-done { border-color: #10b981; background-color: #ecfdf5; color: #047857; }
+        .tab-active { border-bottom: 2px solid #059669; color: #059669; font-weight: 600; }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between text-slate-800 bg-slate-50">
+
+    <!-- HEADER -->
+    <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center space-x-3 text-center md:text-left">
+                <div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center shrink-0 text-amber-300 text-2xl font-bold">
+                    <i class="fa-solid fa-school-flag"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Profiling Madrasah Inklusi</h1>
+                    <p class="text-xs sm:text-sm text-emerald-100 font-medium">Forum Pendidik Madrasah Inklusi (FPMI) Sumatera Barat</p>
+                </div>
+            </div>
+            
+            <button onclick="openScriptModal()" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow border border-emerald-400 transition-all">
+                <i class="fa-solid fa-code"></i>
+                <span>Panduan & Kode Apps Script</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex-grow w-full">
+        
+        <!-- STEPPER INDICATOR -->
+        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs sm:text-sm">
+                <div id="step-btn-1" class="step-indicator p-2.5 rounded-xl border-2 border-slate-200 transition-all flex flex-col items-center gap-1 step-active">
+                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs flex items-center justify-center font-bold">1</span>
+                    <span>Identitas</span>
+                </div>
+                <div id="step-btn-2" class="step-indicator p-2.5 rounded-xl border-2 border-slate-200 transition-all flex flex-col items-center gap-1 opacity-60">
+                    <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs flex items-center justify-center font-bold">2</span>
+                    <span>PTK & GPK</span>
+                </div>
+                <div id="step-btn-3" class="step-indicator p-2.5 rounded-xl border-2 border-slate-200 transition-all flex flex-col items-center gap-1 opacity-60">
+                    <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs flex items-center justify-center font-bold">3</span>
+                    <span>Siswa & PDBK</span>
+                </div>
+                <div id="step-btn-4" class="step-indicator p-2.5 rounded-xl border-2 border-slate-200 transition-all flex flex-col items-center gap-1 opacity-60">
+                    <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs flex items-center justify-center font-bold">4</span>
+                    <span>Sarpras</span>
+                </div>
+                <div id="step-btn-5" class="step-indicator p-2.5 rounded-xl border-2 border-slate-200 transition-all flex flex-col items-center gap-1 opacity-60 col-span-2 sm:col-span-1">
+                    <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs flex items-center justify-center font-bold">5</span>
+                    <span>Program & SK</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM STARTS HERE -->
+        <form id="profilingForm" onsubmit="handleFormSubmit(event)" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8">
+            
+            <!-- SECTION 1: IDENTITAS MADRASAH -->
+            <div id="section-1" class="form-section">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-id-card text-emerald-600"></i>
+                        BAGIAN 1: Identitas Madrasah
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Lengkapi data pokok dan lokasi madrasah Anda.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">NSM (Nomor Statistik Madrasah) <span class="text-red-500">*</span></label>
+                        <input type="text" id="nsm" name="nsm" required placeholder="Contoh: 121113010001" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">NPSN <span class="text-red-500">*</span></label>
+                        <input type="text" id="npsn" name="npsn" required placeholder="Contoh: 10301234" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Nama Madrasah <span class="text-red-500">*</span></label>
+                        <input type="text" id="namaMadrasah" name="namaMadrasah" required placeholder="Contoh: MAN 1 Kota Padang" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Jenjang <span class="text-red-500">*</span></label>
+                        <select id="jenjang" name="jenjang" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih Jenjang --</option>
+                            <option value="RA">RA (Raudhatul Athfal)</option>
+                            <option value="MI">MI (Madrasah Ibtidaiyah)</option>
+                            <option value="MTs">MTs (Madrasah Tsanawiyah)</option>
+                            <option value="MA">MA (Madrasah Aliyah)</option>
+                            <option value="MAK">MAK (Madrasah Aliyah Kejuruan)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Status Madrasah <span class="text-red-500">*</span></label>
+                        <select id="status" name="status" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Negeri">Negeri</option>
+                            <option value="Swasta">Swasta</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Nama Kepala Madrasah <span class="text-red-500">*</span></label>
+                        <input type="text" id="namaKepala" name="namaKepala" required placeholder="Nama & Gelar Lengkap" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">No. HP / WA Aktif <span class="text-red-500">*</span></label>
+                        <input type="tel" id="noHp" name="noHp" required placeholder="Contoh: 081234567890" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Alamat Jalan / Komplek <span class="text-red-500">*</span></label>
+                        <input type="text" id="alamat" name="alamat" required placeholder="Jl. Raya No. XX..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Kelurahan / Desa <span class="text-red-500">*</span></label>
+                        <input type="text" id="kelurahan" name="kelurahan" required placeholder="Nama Kelurahan" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Kecamatan <span class="text-red-500">*</span></label>
+                        <input type="text" id="kecamatan" name="kecamatan" required placeholder="Nama Kecamatan" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Kabupaten / Kota <span class="text-red-500">*</span></label>
+                        <input type="text" id="kabupaten" name="kabupaten" required placeholder="Contoh: Kota Padang / Kab. Agam" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Provinsi <span class="text-red-500">*</span></label>
+                        <input type="text" id="provinsi" name="provinsi" value="Sumatera Barat" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-100 text-slate-600 text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: DATA PTK & GPK -->
+            <div id="section-2" class="form-section hidden">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-chalkboard-user text-emerald-600"></i>
+                        BAGIAN 2: Data Pendidik (PTK) & Guru Pendamping Khusus (GPK)
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Data ketenagakerjaan guru dan kualifikasi pembimbing inklusi.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Jumlah Guru PNS / PPPK</label>
+                        <input type="number" min="0" id="guruPns" name="guruPns" value="0" oninput="calculateTotalGuru()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Jumlah Guru Non-PNS / Honorer</label>
+                        <input type="number" min="0" id="guruNonPns" name="guruNonPns" value="0" oninput="calculateTotalGuru()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Total Guru (Otomatis)</label>
+                        <input type="number" id="totalGuru" name="totalGuru" value="0" readonly class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-emerald-50 font-bold text-emerald-800 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">GPK Bersertifikat Pendidikan Inklusi / PLB</label>
+                        <input type="number" min="0" id="gpkSertifikasi" name="gpkSertifikasi" value="0" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">GPK Non-Sertifikat / Guru Pendamping Belajar</label>
+                        <input type="number" min="0" id="gpkNonSertifikasi" name="gpkNonSertifikasi" value="0" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Guru Pernah Mengikuti Pelatihan Inklusi?</label>
+                        <select id="pelatihanInklusi" name="pelatihanInklusi" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih --</option>
+                            <option value="Sudah Pernah">Sudah Pernah</option>
+                            <option value="Belum Pernah">Belum Pernah</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: DATA SISWA & PDBK -->
+            <div id="section-3" class="form-section hidden">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-emerald-600"></i>
+                        BAGIAN 3: Data Siswa Reguler & Peserta Didik Berkebutuhan Khusus (PDBK)
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Isi jumlah siswa reguler serta kualifikasi ragam disabilitas/hambatan PDBK.</p>
+                </div>
+
+                <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Total Siswa Reguler (Non-PDBK) <span class="text-red-500">*</span></label>
+                    <input type="number" min="0" id="totalSiswaReguler" name="totalSiswaReguler" value="0" required class="w-full md:w-1/2 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+                </div>
+
+                <h3 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">Ragam Hambatan Peserta Didik Berkebutuhan Khusus (PDBK):</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">1. Hambatan Penglihatan (Tunanetra)</label>
+                        <input type="number" min="0" id="pdbkPenglihatan" name="pdbkPenglihatan" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">2. Hambatan Pendengaran (Tunarungu)</label>
+                        <input type="number" min="0" id="pdbkPendengaran" name="pdbkPendengaran" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">3. Hambatan Fisik & Motorik (Tunadaksa)</label>
+                        <input type="number" min="0" id="pdbkFisik" name="pdbkFisik" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">4. Hambatan Intelektual (Tunagrahita)</label>
+                        <input type="number" min="0" id="pdbkIntelektual" name="pdbkIntelektual" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">5. Autisme (Autis)</label>
+                        <input type="number" min="0" id="pdbkAutis" name="pdbkAutis" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">6. Kesulitan Belajar Spesifik (Disleksia/dll)</label>
+                        <input type="number" min="0" id="pdbkKesulitanBelajar" name="pdbkKesulitanBelajar" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">7. Gangguan Pemusatan Perhatian (ADHD)</label>
+                        <input type="number" min="0" id="pdbkAdhd" name="pdbkAdhd" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">8. Cerdas / Bakat Istimewa (CIBI)</label>
+                        <input type="number" min="0" id="pdbkCibi" name="pdbkCibi" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">9. Hambatan Ganda (Tunaganda)</label>
+                        <input type="number" min="0" id="pdbkGanda" name="pdbkGanda" value="0" oninput="calculateTotalPdbk()" class="pdbk-input w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                    </div>
+
+                    <div class="md:col-span-3 bg-emerald-50 p-4 rounded-xl border border-emerald-200 mt-2">
+                        <label class="block text-xs font-bold text-emerald-800 uppercase tracking-wider mb-1">Total Peserta Didik Berkebutuhan Khusus (PDBK) - (Otomatis)</label>
+                        <input type="number" id="totalPdbk" name="totalPdbk" value="0" readonly class="w-full text-lg font-bold text-emerald-900 bg-transparent border-none focus:ring-0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: SARANA PRASARANA AKSESIBEL -->
+            <div id="section-4" class="form-section hidden">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-wheelchair text-emerald-600"></i>
+                        BAGIAN 4: Sarana & Prasarana Aksesibel
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Ketersediaan fasilitas fisik ramah disabilitas di lingkungan madrasah.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Ramp / Bidang Miring Aksesibel <span class="text-red-500">*</span></label>
+                        <select id="ramp" name="ramp" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih Ketersediaan --</option>
+                            <option value="Ada & Layak">Ada & Layak Digunakan</option>
+                            <option value="Ada tapi Rusak/Kurang Layak">Ada tapi Rusak / Kurang Layak</option>
+                            <option value="Tidak Ada">Tidak Ada</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Guiding Block / Ubin Pemandu <span class="text-red-500">*</span></label>
+                        <select id="guidingBlock" name="guidingBlock" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih Ketersediaan --</option>
+                            <option value="Ada & Layak">Ada & Layak Digunakan</option>
+                            <option value="Ada tapi Rusak/Kurang Layak">Ada tapi Rusak / Kurang Layak</option>
+                            <option value="Tidak Ada">Tidak Ada</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Toilet Khusus Aksesibel / Disabilitas <span class="text-red-500">*</span></label>
+                        <select id="toiletAksesibel" name="toiletAksesibel" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih Ketersediaan --</option>
+                            <option value="Ada & Layak">Ada & Layak Digunakan</option>
+                            <option value="Ada tapi Rusak/Kurang Layak">Ada tapi Rusak / Kurang Layak</option>
+                            <option value="Tidak Ada">Tidak Ada</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Ruang Sumber / Ruang Layanan Khusus <span class="text-red-500">*</span></label>
+                        <select id="ruangSumber" name="ruangSumber" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih --</option>
+                            <option value="Ada">Ada</option>
+                            <option value="Tidak Ada">Tidak Ada</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Alat Bantu Belajar / Media Pembelajaran Khusus <span class="text-red-500">*</span></label>
+                        <select id="alatBantu" name="alatBantu" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih --</option>
+                            <option value="Ada & Memadai">Ada & Memadai</option>
+                            <option value="Ada tapi Sangat Terbatas">Ada tapi Sangat Terbatas</option>
+                            <option value="Belum Ada">Belum Ada</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: PROGRAM & KEBIJAKAN INKLUSI -->
+            <div id="section-5" class="form-section hidden">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-file-contract text-emerald-600"></i>
+                        BAGIAN 5: Program, Dokumen & Kebijakan Inklusi
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Dokumen legalitas, adaptasi kurikulum, dan kemitraan lembaga.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">SK Penyelenggara Madrasah Inklusi <span class="text-red-500">*</span></label>
+                        <select id="skInklusi" name="skInklusi" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih --</option>
+                            <option value="Ada (SK Kanwil / Kankemenag)">Ada (SK Kanwil / Kankemenag)</option>
+                            <option value="Ada (SK Kepala Madrasah)">Ada (SK Kepala Madrasah)</option>
+                            <option value="Belum Ada / Dalam Proses">Belum Ada / Dalam Proses</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Dokumen PPI (Program Pembelajaran Individual) <span class="text-red-500">*</span></label>
+                        <select id="dokumenPpi" name="dokumenPpi" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih --</option>
+                            <option value="Ada & Disusun Berkala">Ada & Disusun Berkala</option>
+                            <option value="Belum Disusun">Belum Disusun</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Adaptasi Kurikulum / Modifikasi Pembelajaran <span class="text-red-500">*</span></label>
+                        <select id="adaptasiKurikulum" name="adaptasiKurikulum" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih --</option>
+                            <option value="Sudah Dilakukan">Sudah Dilakukan</option>
+                            <option value="Belum Dilakukan">Belum Dilakukan</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Kerjasama / MoU dengan Instansi Khusus (SLB, Psikolog, DLL) <span class="text-red-500">*</span></label>
+                        <select id="kerjasamaInstansi" name="kerjasamaInstansi" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white">
+                            <option value="">-- Pilih --</option>
+                            <option value="Ada MoU Aktif">Ada MoU Aktif</option>
+                            <option value="Tidak Ada">Tidak Ada</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Catatan Tambahan / Kendala Utama Madrasah</label>
+                        <textarea id="catatan" name="catatan" rows="3" placeholder="Tuliskan tantangan atau harapan utama terkait pendidikan inklusi..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NAVIGATION BUTTONS -->
+            <div class="mt-8 pt-4 border-t border-slate-200 flex flex-row justify-between items-center gap-3">
+                <button type="button" id="prevBtn" onclick="changeStep(-1)" class="hidden px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-medium text-sm hover:bg-slate-100 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </button>
+
+                <div class="ml-auto flex items-center gap-3">
+                    <button type="button" id="nextBtn" onclick="changeStep(1)" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md transition-all flex items-center gap-2">
+                        <span>Lanjut</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                    <button type="submit" id="submitBtn" class="hidden px-7 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Kirim Data Profiling</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800 text-center">
+        <p class="font-medium text-slate-300">Forum Pendidik Madrasah Inklusi (FPMI) Sumatera Barat</p>
+        <p class="mt-1 text-slate-500">Aplikasi Profiling Data Layanan Madrasah Inklusi &copy; 2026</p>
+    </footer>
+
+    <!-- MODAL GUIDE & CODE.GS -->
+    <div id="scriptModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+            
+            <div class="px-6 py-4 bg-emerald-800 text-white flex justify-between items-center">
+                <h3 class="font-bold text-base flex items-center gap-2">
+                    <i class="fa-solid fa-code"></i> Setup Backend Google Apps Script (`Code.gs`)
+                </h3>
+                <button onclick="closeScriptModal()" class="text-emerald-200 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto text-xs text-slate-700 space-y-4 flex-grow">
+                
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-800">
+                    <strong>Catatan Pemasangan:</strong> Tempelkan kode dibawah ini ke menu <em>Ekstensi > Apps Script</em> pada Google Sheet Database Anda.
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <span class="font-bold uppercase tracking-wider text-slate-500">File: Code.gs</span>
+                    <button onclick="copyCodeGs()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> Copy Code.gs
+                    </button>
+                </div>
+
+                <textarea id="codeGsText" readonly rows="12" class="w-full font-mono text-xs p-3 bg-slate-900 text-emerald-400 rounded-xl focus:outline-none border border-slate-800">
+function doGet(e) {
+  return HtmlService.createHtmlOutputFromFile('index')
+    .setTitle('Profiling Madrasah Inklusi - FPMI Sumbar')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1.0')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    return submitData(data);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: 'Gagal parse JSON: ' + err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function submitData(data) {
+  try {
+    var sheetId = '1PoUgqDcObt_0Q2thshI82_H5rkA86X_l6AJanccAHTo';
+    var ss = SpreadsheetApp.openById(sheetId);
+    var sheet = ss.getActiveSheet();
+    
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        'Timestamp', 'NSM', 'NPSN', 'Nama Madrasah', 'Jenjang', 'Status',
+        'Nama Kepala Madrasah', 'No HP / WA', 'Alamat', 'Kelurahan', 'Kecamatan',
+        'Kabupaten/Kota', 'Provinsi', 'Guru PNS/PPPK', 'Guru Non-PNS', 'Total Guru',
+        'GPK Bersertifikat', 'GPK Non-Sertifikat', 'Pelatihan Inklusi', 'Total Siswa Reguler',
+        'PDBK Penglihatan', 'PDBK Pendengaran', 'PDBK Fisik', 'PDBK Intelektual',
+        'PDBK Autis', 'PDBK Kesulitan Belajar', 'PDBK ADHD', 'PDBK CIBI', 'PDBK Ganda',
+        'Total PDBK', 'Ramp', 'Guiding Block', 'Toilet Aksesibel', 'Ruang Sumber',
+        'Alat Bantu Belajar', 'SK Inklusi', 'Dokumen PPI', 'Adaptasi Kurikulum',
+        'Kerjasama Instansi', 'Catatan / Kendala'
+      ]);
+      
+      var headerRange = sheet.getRange(1, 1, 1, 40);
+      headerRange.setFontWeight('bold');
+      headerRange.setBackground('#065f46');
+      headerRange.setFontColor('#FFFFFF');
+    }
+
+    var timestamp = new Date();
+    
+    var rowData = [
+      timestamp,
+      "'" + (data.nsm || ''),
+      "'" + (data.npsn || ''),
+      data.namaMadrasah || '',
+      data.jenjang || '',
+      data.status || '',
+      data.namaKepala || '',
+      "'" + (data.noHp || ''),
+      data.alamat || '',
+      data.kelurahan || '',
+      data.kecamatan || '',
+      data.kabupaten || '',
+      data.provinsi || '',
+      Number(data.guruPns) || 0,
+      Number(data.guruNonPns) || 0,
+      Number(data.totalGuru) || 0,
+      Number(data.gpkSertifikasi) || 0,
+      Number(data.gpkNonSertifikasi) || 0,
+      data.pelatihanInklusi || '',
+      Number(data.totalSiswaReguler) || 0,
+      Number(data.pdbkPenglihatan) || 0,
+      Number(data.pdbkPendengaran) || 0,
+      Number(data.pdbkFisik) || 0,
+      Number(data.pdbkIntelektual) || 0,
+      Number(data.pdbkAutis) || 0,
+      Number(data.pdbkKesulitanBelajar) || 0,
+      Number(data.pdbkAdhd) || 0,
+      Number(data.pdbkCibi) || 0,
+      Number(data.pdbkGanda) || 0,
+      Number(data.totalPdbk) || 0,
+      data.ramp || '',
+      data.guidingBlock || '',
+      data.toiletAksesibel || '',
+      data.ruangSumber || '',
+      data.alatBantu || '',
+      data.skInklusi || '',
+      data.dokumenPpi || '',
+      data.adaptasiKurikulum || '',
+      data.kerjasamaInstansi || '',
+      data.catatan || ''
+    ];
+
+    sheet.appendRow(rowData);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      message: 'Data Profiling Madrasah berhasil dikirim dan disimpan ke Google Sheets.'
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: 'Gagal menyimpan data: ' + err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}</textarea>
+
+                <div class="space-y-2 pt-2">
+                    <h4 class="font-bold text-slate-800">Langkah Deployment Web App:</h4>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-600">
+                        <li>Buka Google Sheets Target Database.</li>
+                        <li>Klik <strong>Ekstensi &gt; Apps Script</strong>.</li>
+                        <li>Ganti seluruh isi file <code>Code.gs</code> dengan kode di atas.</li>
+                        <li>Klik <strong>Terapkan (Deploy) &gt; Formasi baru (New deployment)</strong>.</li>
+                        <li>Pilih <strong>Aplikasi Web (Web App)</strong>, Jalankan sebagai: <strong>Saya (Me)</strong>, Akses: <strong>Siapa saja (Anyone)</strong>.</li>
+                        <li>Klik <strong>Terapkan</strong> dan berikan otorisasi izin akses.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="px-6 py-3 bg-slate-100 border-t border-slate-200 flex justify-end">
+                <button onclick="closeScriptModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-xl font-medium">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        // URL Web App Google Apps Script
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_EXAMPLE_DEPLOYMENT_ID/exec";
+
+        function calculateTotalGuru() {
+            const pns = parseInt(document.getElementById('guruPns').value) || 0;
+            const nonPns = parseInt(document.getElementById('guruNonPns').value) || 0;
+            document.getElementById('totalGuru').value = pns + nonPns;
+        }
+
+        function calculateTotalPdbk() {
+            const inputs = document.querySelectorAll('.pdbk-input');
+            let total = 0;
+            inputs.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+            document.getElementById('totalPdbk').value = total;
+        }
+
+        function changeStep(delta) {
+            if (delta === 1 && !validateCurrentStep()) {
+                return;
+            }
+
+            const nextStep = currentStep + delta;
+            if (nextStep >= 1 && nextStep <= totalSteps) {
+                document.getElementById(`section-${currentStep}`).classList.add('hidden');
+                document.getElementById(`section-${nextStep}`).classList.remove('hidden');
+                
+                currentStep = nextStep;
+                updateStepUI();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function updateStepUI() {
+            for (let i = 1; i <= totalSteps; i++) {
+                const btn = document.getElementById(`step-btn-${i}`);
+                if (i === currentStep) {
+                    btn.className = "step-indicator p-2.5 rounded-xl border-2 border-emerald-600 bg-emerald-50/50 text-emerald-800 font-bold transition-all flex flex-col items-center gap-1";
+                } else if (i < currentStep) {
+                    btn.className = "step-indicator p-2.5 rounded-xl border-2 border-emerald-500 bg-emerald-100/50 text-emerald-700 transition-all flex flex-col items-center gap-1";
+                } else {
+                    btn.className = "step-indicator p-2.5 rounded-xl border-2 border-slate-200 transition-all flex flex-col items-center gap-1 opacity-60";
+                }
+            }
+
+            // Toggle Navigation Buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (currentStep === 1) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+
+            if (currentStep === totalSteps) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        function validateCurrentStep() {
+            const currentSection = document.getElementById(`section-${currentStep}`);
+            const requiredInputs = currentSection.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+                } else {
+                    input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Form Belum Lengkap',
+                    text: 'Mohon isi semua kolom yang bertanda bintang (*) sebelum melanjutkan.',
+                    confirmColor: '#059669'
+                });
+            }
+
+            return isValid;
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            if (!validateCurrentStep()) return;
+
+            const form = document.getElementById('profilingForm');
+            const formData = new FormData(form);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            Swal.fire({
+                title: 'Menyimpan Data...',
+                text: 'Sedang mengunggah data profiling ke database Google Sheets',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Submission Logic
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                // Direct Google Apps Script iframe runner
+                google.script.run
+                    .withSuccessHandler(onSuccess)
+                    .withFailureHandler(onFailure)
+                    .submitData(data);
+            } else if (GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes("EXAMPLE_DEPLOYMENT_ID")) {
+                // Fetch POST request for hosted external Web App
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(data)
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) onSuccess(res);
+                    else onFailure(res.message);
+                })
+                .catch(err => onFailure(err));
+            } else {
+                // Standalone Simulation fallback
+                setTimeout(() => {
+                    onSuccess({ success: true, message: 'Data berhasil disimulasikan (Pratinjau Standalone).' });
+                }, 1200);
+            }
+        }
+
+        function onSuccess(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Disimpan!',
+                text: response.message || 'Data Profiling Madrasah berhasil terkirim.',
+                confirmColor: '#059669'
+            }).then(() => {
+                document.getElementById('profilingForm').reset();
+                currentStep = 1;
+                updateStepUI();
+                document.getElementById('section-5').classList.add('hidden');
+                document.getElementById('section-1').classList.remove('hidden');
+            });
+        }
+
+        function onFailure(error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Kirim Data',
+                text: typeof error === 'string' ? error : (error.message || 'Terjadi kesalahan sistem saat mengirim data.'),
+                confirmColor: '#dc2626'
+            });
+        }
+
+        function openScriptModal() {
+            document.getElementById('scriptModal').classList.remove('hidden');
+        }
+
+        function closeScriptModal() {
+            document.getElementById('scriptModal').classList.add('hidden');
+        }
+
+        function copyCodeGs() {
+            const copyText = document.getElementById('codeGsText');
+            copyText.select();
+            document.execCommand('copy');
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Kode Code.gs disalin!',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+    </script>
+</body>
+</html>
